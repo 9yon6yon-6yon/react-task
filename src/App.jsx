@@ -14,7 +14,7 @@ function App() {
         <NavSection />
         <HeroSection />
         <AboutSection />
-        {/* <MovieSection /> */}
+        <MovieSection />
         <ServicesSection />
         <FooterSection />
       </div>
