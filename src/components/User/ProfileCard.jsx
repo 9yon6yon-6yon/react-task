@@ -1,15 +1,16 @@
+import InputComponet from "./InputComponent";
+
+/* eslint-disable react/prop-types */
 const ProfileCard = ({
   user,
-  newUser,
-  message,
-  setEditing,
   editing,
   handleEdit,
   handleInputChange,
   deleteUser,
+  updateUser,
+  createUser,
 }) => {
-  if (!user) return null;
-
+  const userData = user;
   return (
     <div className="container mx-auto bg-slate-300 p-10 rounded-xl">
       <div className="flex flex-wrap">
@@ -17,21 +18,21 @@ const ProfileCard = ({
           <div className="card-user bg-white shadow-lg rounded-lg overflow-hidden">
             <div className="content p-4">
               <div className="author text-center">
-                <div className="absolute border-white w-32 h-32">
+                <div className="relative border-white w-32 h-32">
                   <img
                     className="w-full h-full object-cover rounded-full"
                     src={
-                      user?.image ||
+                      userData?.image ||
                       "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
                     }
-                    alt={user?.name || "Default Avatar"}
+                    alt={userData?.name || "Default Avatar"}
                   />
                 </div>
                 <h4 className="title text-lg mt-4">
-                  {user?.name || "Anonymous"}
+                  {userData?.name}
                   <br />
                   <a href="#" className="text-gray-600 text-sm ml-4">
-                    <small>{user?._id}</small>
+                    <small>{userData?._id}</small>
                   </a>
                 </h4>
               </div>
@@ -39,8 +40,8 @@ const ProfileCard = ({
             <hr className="my-4" />
             <div className="flex flex-wrap justify-center gap-2 mb-10">
               <p className="font-bold w-full text-center">Skills:</p>
-              {user?.skills && user?.skills.length > 0 ? (
-                user?.skills.map((skill, index) => (
+              {userData?.skills && userData?.skills.length > 0 ? (
+                userData?.skills.map((skill, index) => (
                   <span
                     key={index}
                     className="bg-gray-200 rounded px-2 py-1 text-sm"
@@ -61,8 +62,6 @@ const ProfileCard = ({
               <h4 className="title text-lg">Edit Profile</h4>
             </div>
             <div className="content p-4">
-              {message && <p className="text-green-500 mb-4">{message}</p>}
-
               <form>
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <div className="w-full md:w-1/3 px-3">
@@ -74,76 +73,61 @@ const ProfileCard = ({
                       name="email"
                       className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
                       placeholder="Email"
-                      value={user?.email}
+                      defaultValue={userData?.email}
                       onChange={handleInputChange}
                     />
                   </div>
 
                   <div className="w-full md:w-1/3 px-3">
                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                      user name
+                      Name
                     </label>
                     <input
                       type="text"
                       name="name"
                       className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
-                      value={user?.name || "Anonymous"}
+                      defaultValue={userData?.name}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div className="w-full md:w-1/3  px-3 mb-6 md:mb-0">
-                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                      Nationality
-                    </label>
-                    <input
-                      type="text"
-                      name="nationality"
-                      className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3"
-                      value={user?.nationality}
-                      onChange={handleInputChange}
-                      disabled
+                    <InputComponet
+                      classproperty={"w-full md:w-1/3  px-3 mb-6 md:mb-0"}
+                      inputLabel={"Nationality"}
+                      type={"text"}
+                      name={"nationality"}
+                      value={userData?.nationality}
+                      method={handleInputChange}
                     />
                   </div>
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
-                  <div className="w-full px-3">
-                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      name="address"
-                      className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
-                      value={user?.address}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                  <InputComponet
+                    classproperty={"w-full px-3"}
+                    inputLabel={"Address"}
+                    type={"text"}
+                    name={"address"}
+                    value={userData?.address}
+                    method={handleInputChange}
+                  />
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
-                  <div className="w-full md:w-1/2 px-3">
-                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                      Website
-                    </label>
-                    <input
-                      type="text"
-                      name="website"
-                      className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
-                      value={user?.website}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="w-full md:w-1/4 px-3">
-                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                      Gender
-                    </label>
-                    <input
-                      type="text"
-                      name="gender"
-                      className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
-                      value={user?.gender}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                  <InputComponet
+                    classproperty={"w-full md:w-1/2 px-3"}
+                    inputLabel={"Website"}
+                    type={"text"}
+                    name={"website"}
+                    value={userData?.website}
+                    method={handleInputChange}
+                  />
+                  <InputComponet
+                    classproperty={"w-full md:w-1/4 px-3"}
+                    inputLabel={"Gender"}
+                    type={"text"}
+                    name={"website"}
+                    value={userData?.gender}
+                    method={handleInputChange}
+                  />
                 </div>
                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                   Educational Qualification
@@ -158,7 +142,7 @@ const ProfileCard = ({
                       type="text"
                       name="edicationalQualifications.degree"
                       className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
-                      value={user?.educationalQualifications?.degree}
+                      defaultValue={userData?.educationalQualifications?.degree}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -170,7 +154,9 @@ const ProfileCard = ({
                       type="text"
                       name="edicationalQualifications.university"
                       className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
-                      value={user?.educationalQualifications?.university}
+                      defaultValue={
+                        userData?.educationalQualifications?.university
+                      }
                       onChange={handleInputChange}
                     />
                   </div>
@@ -182,7 +168,9 @@ const ProfileCard = ({
                       type="text"
                       name="edicationalQualifications.session"
                       className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
-                      value={user?.educationalQualifications?.session}
+                      defaultValue={
+                        userData?.educationalQualifications?.session
+                      }
                       onChange={handleInputChange}
                     />
                   </div>
@@ -194,7 +182,7 @@ const ProfileCard = ({
                       type="text"
                       name="edicationalQualifications.cgpa"
                       className="form-input block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4"
-                      value={user?.educationalQualifications?.cgpa}
+                      defaultValue={userData?.educationalQualifications?.cgpa}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -203,9 +191,14 @@ const ProfileCard = ({
                   <button
                     onClick={() => {
                       if (editing) {
-                        handleEdit(newUser);
+                        if (!user) {
+                          createUser();
+                          console.error("user is undefined");
+                          return;
+                        }
+                        updateUser();
                       } else {
-                        setEditing(true); 
+                        handleEdit(user);
                       }
                     }}
                     type="button"
@@ -214,7 +207,7 @@ const ProfileCard = ({
                     {editing ? "Update Profile" : "Edit"}
                   </button>
                   <button
-                    onClick={() => deleteUser(user._id)}
+                    onClick={() => deleteUser(userData?._id)}
                     type="submit"
                     className="btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4  m-2 rounded"
                   >

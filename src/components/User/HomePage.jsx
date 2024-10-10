@@ -6,7 +6,7 @@ const apiUrl = "https://wesoftin-backend.vercel.app"; // replace with actual API
 
 const HomePage = () => {
   const [users, setUsers] = useState([]);
-  const [newUser, setNewUser] = useState([]);
+  const [newUser, setNewUser] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
@@ -46,6 +46,12 @@ const HomePage = () => {
 
   // PUT update existing user
   const updateUser = async () => {
+    if (!selectedUserId) {
+      console.error("No user selected for updating");
+      return;
+    }
+    console.log(selectedUserId);
+
     try {
       const response = await fetch(`${apiUrl}/users/${selectedUserId}`, {
         method: "PUT",
@@ -55,10 +61,13 @@ const HomePage = () => {
         body: JSON.stringify(newUser),
       });
       const data = await response.json();
+      console.log(data);
       if (data.modifiedCount > 0) {
         setMessage("User updated successfully!");
         getUsers();
         setEditing(false);
+        setSelectedUser(null);
+        setSelectedUserId(null);
       }
     } catch (error) {
       console.error("Error updating user:", error);
@@ -97,6 +106,10 @@ const HomePage = () => {
 
   // Set user data for editing
   const handleEdit = (user) => {
+    if (!user || !user._id) {
+      console.error("User is undefined or does not have an _id");
+      return;
+    }
     setNewUser(user);
     setSelectedUserId(user._id);
     setEditing(true);
@@ -105,6 +118,7 @@ const HomePage = () => {
   return (
     <>
       <div className="container mx-auto p-4 mb-10 bg-indigo-100">
+        {message && <p className="text-green-500 mb-4">{message}</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {users.map((user, index) => (
             <UserCard
@@ -118,13 +132,12 @@ const HomePage = () => {
       <div>
         <ProfileCard
           user={selectedUser}
-          newuser={setSelectedUser}
-          message={message}
-          setEditing={setEditing}
           editing={editing}
           handleEdit={handleEdit}
           handleInputChange={handleInputChange}
           deleteUser={deleteUser}
+          updateUser={updateUser}
+          createUser={createUser}
         />
       </div>
     </>
